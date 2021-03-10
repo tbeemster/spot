@@ -105,6 +105,14 @@ pub struct PlaylistDescription {
 }
 
 #[derive(Clone, Debug)]
+pub struct PodcastDescription {
+    pub id: String,
+    pub name: String,
+    pub art: Option<String>,
+    pub publisher: String,
+}
+
+#[derive(Clone, Debug)]
 pub struct SongDescription {
     pub id: String,
     pub title: String,

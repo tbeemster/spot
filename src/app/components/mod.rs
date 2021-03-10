@@ -57,6 +57,9 @@ pub use notification::*;
 mod saved_playlists;
 pub use saved_playlists::*;
 
+mod podcasts;
+pub use podcasts::*;
+
 mod playlist_details;
 pub use playlist_details::*;
 

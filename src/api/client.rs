@@ -348,6 +348,21 @@ impl SpotifyClient {
             .uri("/v1/me/playlists".to_string(), Some(&query))
     }
 
+    pub(crate) fn get_saved_podcasts(
+        &self,
+        offset: u32,
+        limit: u32,
+    ) -> SpotifyRequest<'_, (), Page<Podcast>> {
+        let query = make_query_params()
+            .append_pair("offset", &offset.to_string()[..])
+            .append_pair("limit", &limit.to_string()[..])
+            .finish();
+
+        self.request()
+            .method(Method::GET)
+            .uri("/v1/me/shows".to_string(), Some(&query))
+    }
+
     pub(crate) fn search(
         &self,
         query: String,

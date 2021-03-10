@@ -99,6 +99,20 @@ impl WithImages for Playlist {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+pub struct Podcast {
+    pub id: String,
+    pub name: String,
+    pub images: Vec<Image>,
+    pub publisher: String,
+}
+
+impl WithImages for Podcast {
+    fn images(&self) -> &[Image] {
+        &self.images[..]
+    }
+}
+
+#[derive(Deserialize, Debug, Clone)]
 pub struct PlaylistTrack {
     pub is_local: bool,
     pub track: Option<TrackItem>,
@@ -317,6 +331,18 @@ impl Into<PlaylistDescription> for Playlist {
             art,
             songs: vec![],
             owner: UserRef { id, display_name },
+        }
+    }
+}
+
+impl Into<PodcastDescription> for Podcast {
+    fn into(self) -> PodcastDescription {
+        let art = self.best_image_for_width(200).map(|i| i.url.clone());
+        PodcastDescription {
+            id: self.id,
+            name: self.name,
+            art,
+            publisher: self.publisher
         }
     }
 }

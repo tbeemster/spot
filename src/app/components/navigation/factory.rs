@@ -33,6 +33,12 @@ impl ScreenFactory {
         SavedPlaylists::new(self.worker.clone(), model)
     }
 
+    pub fn make_podcasts(&self) -> Podcasts {
+        let model =
+            PodcastsModel::new(Rc::clone(&self.app_model), self.dispatcher.box_clone());
+        Podcasts::new(self.worker.clone(), model)
+    }
+
     pub fn make_now_playing(&self) -> NowPlaying {
         let model = NowPlayingModel::new(Rc::clone(&self.app_model), self.dispatcher.box_clone());
         NowPlaying::new(model)

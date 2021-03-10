@@ -22,6 +22,8 @@
     <file alias="components/library.ui">app/components/library/library.ui</file>
     <!-- saved_playlists -->
     <file alias="components/saved_playlists.ui">app/components/saved_playlists/saved_playlists.ui</file>
+    <!-- podcasts -->
+    <file alias="components/podcasts.ui">app/components/podcasts/podcasts.ui</file>
     <!-- now playing -->
     <file alias="components/now_playing.ui">app/components/now_playing/now_playing.ui</file>
     <file alias="components/now_playing.css">app/components/now_playing/now_playing.css</file>

@@ -23,12 +23,14 @@ pub struct HomePane {
 impl HomePane {
     pub fn new(stack_sidebar: gtk::StackSidebar, screen_factory: &ScreenFactory) -> Self {
         let library = screen_factory.make_library();
+        let podcasts = screen_factory.make_podcasts();
         let saved_playlists = screen_factory.make_saved_playlists();
         let now_playing = screen_factory.make_now_playing();
 
         let stack = gtk::Stack::new();
         stack.set_transition_type(gtk::StackTransitionType::Crossfade);
         stack.add_titled(library.get_root_widget(), "library", "Library");
+        stack.add_titled(podcasts.get_root_widget(), "podcasts", "Podcasts");
         stack.add_titled(
             saved_playlists.get_root_widget(),
             "saved_playlists",

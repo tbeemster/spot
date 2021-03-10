@@ -43,6 +43,12 @@ pub trait SpotifyApiClient {
         limit: u32,
     ) -> BoxFuture<SpotifyResult<Vec<PlaylistDescription>>>;
 
+    fn get_saved_podcasts(
+        &self,
+        offset: u32,
+        limit: u32,
+    ) -> BoxFuture<SpotifyResult<Vec<PodcastDescription>>>;
+
     fn search(
         &self,
         query: &str,
@@ -63,6 +69,7 @@ pub trait SpotifyApiClient {
 enum SpotCacheKey<'a> {
     SavedAlbums(u32, u32),
     SavedPlaylists(u32, u32),
+    SavedPodcasts(u32, u32),
     Album(&'a str),
     AlbumLiked(&'a str),
     Playlist(&'a str),
@@ -78,6 +85,9 @@ impl<'a> SpotCacheKey<'a> {
             Self::SavedAlbums(offset, limit) => format!("me_albums_{}_{}.json", offset, limit),
             Self::SavedPlaylists(offset, limit) => {
                 format!("me_playlists_{}_{}.json", offset, limit)
+            }
+            Self::SavedPodcasts(offset, limit) => {
+                format!("me_podcasts_{}_{}.json", offset, limit)
             }
             Self::Album(id) => format!("album_{}.json", id),
             Self::AlbumLiked(id) => format!("album_liked_{}.json", id),
@@ -207,6 +217,31 @@ impl SpotifyApiClient for CachedSpotifyClient {
                 .collect::<Vec<PlaylistDescription>>();
 
             Ok(albums)
+        })
+    }
+
+    fn get_saved_podcasts(
+        &self,
+        offset: u32,
+        limit: u32,
+    ) -> BoxFuture<SpotifyResult<Vec<PodcastDescription>>> {
+        Box::pin(async move {
+            let page = self
+                .cache_get_or_write(SpotCacheKey::SavedPodcasts(offset, limit), None, |etag| {
+                    self.client
+                        .get_saved_podcasts(offset, limit)
+                        .etag(etag)
+                        .send()
+                })
+                .await?;
+
+            let podcasts = page
+                .items
+                .into_iter()
+                .map(|podcast| podcast.into())
+                .collect::<Vec<PodcastDescription>>();
+
+            Ok(podcasts)
         })
     }
 
